@@ -11,7 +11,8 @@ class NearChurchesPage extends StatefulWidget {
   State<NearChurchesPage> createState() => _NearChurchesPageState();
 }
 
-class _NearChurchesPageState extends State<NearChurchesPage> {
+class _NearChurchesPageState extends State<NearChurchesPage>  with
+    AutomaticKeepAliveClientMixin<NearChurchesPage>{
 
   List<Church> churches = <Church>[];
 
@@ -23,13 +24,7 @@ class _NearChurchesPageState extends State<NearChurchesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text("Közeli templomok"),
-      ),
-      body: ListView.builder(
+    return ListView.builder(
         padding: const EdgeInsets.all(8),
         itemCount: churches.length,
         itemBuilder: (BuildContext context, int index) {
@@ -37,7 +32,6 @@ class _NearChurchesPageState extends State<NearChurchesPage> {
               church: churches[index]
           );
         },
-      ),
     );
   }
 
@@ -48,4 +42,7 @@ class _NearChurchesPageState extends State<NearChurchesPage> {
       churches = list;
     });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
