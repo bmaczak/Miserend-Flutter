@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:miserend/church_list_item.dart';
 
 import 'database/church.dart';
 import 'database/miserend_database.dart';
@@ -32,10 +33,8 @@ class _NearChurchesPageState extends State<NearChurchesPage> {
         padding: const EdgeInsets.all(8),
         itemCount: churches.length,
         itemBuilder: (BuildContext context, int index) {
-          return Container(
-            height: 50,
-            color: Colors.white,
-            child: Center(child: Text(churches[index].name ?? "?")),
+          return ChurchListItem(
+              church: churches[index]
           );
         },
         separatorBuilder: (BuildContext context, int index) => const Divider(),
