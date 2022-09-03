@@ -39,10 +39,20 @@ class _ChurchListItemState extends State<ChurchListItem> {
                   children: [
                     Expanded(
                         flex: 2,
-                        child: Column(children: [
-                          Text(widget.church.name ?? ""),
-                          Text(widget.church.commonName ?? ""),
-                        ])),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0),
+                                child: Text(widget.church.name ?? "",
+                                    style: Theme.of(context).textTheme.subtitle1),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                                child: Text(widget.church.commonName ?? "",
+                                    style: Theme.of(context).textTheme.subtitle2),
+                              ),
+                            ])),
                     Expanded(
                       flex: 1,
                       child: FadeInImage.assetNetwork(
