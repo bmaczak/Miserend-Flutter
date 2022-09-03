@@ -25,7 +25,12 @@ class _ChurchListItemState extends State<ChurchListItem> {
           },
           child: SizedBox(
             height: 100,
-            child: Center(child: Text(widget.church.name ?? "")),
+            child: Row(
+              children: [
+                Image.network(widget.church.imageUrl ?? ""),
+                Center(child: Text(widget.church.name ?? "")),
+              ]
+            )
           ),
         ),
       ),
