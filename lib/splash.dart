@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:miserend/near_churches_page.dart';
 import 'package:path/path.dart';
 import "package:sqflite/sqflite.dart";
 import 'main.dart';
@@ -31,7 +32,7 @@ class _RouteSplashState extends State<RouteSplash> {
   _goToMainScreen() {
     Navigator.push(
       this.context,
-      MaterialPageRoute(builder: (context) => const MyHomePage()),
+      MaterialPageRoute(builder: (context) => const NearChurchesPage()),
     );
   }
 

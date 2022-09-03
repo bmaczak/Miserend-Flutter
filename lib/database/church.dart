@@ -1,6 +1,6 @@
 class Church {
   final int id;
-  final String name;
+  final String? name;
   final String? commonName;
   final bool? isGreek;
   final double? lat;
