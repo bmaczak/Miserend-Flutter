@@ -29,7 +29,7 @@ class _NearChurchesPageState extends State<NearChurchesPage> {
         // the App.build method, and use it to set our appbar title.
         title: Text("Közeli templomok"),
       ),
-      body: ListView.separated(
+      body: ListView.builder(
         padding: const EdgeInsets.all(8),
         itemCount: churches.length,
         itemBuilder: (BuildContext context, int index) {
@@ -37,7 +37,6 @@ class _NearChurchesPageState extends State<NearChurchesPage> {
               church: churches[index]
           );
         },
-        separatorBuilder: (BuildContext context, int index) => const Divider(),
       ),
     );
   }

@@ -16,22 +16,43 @@ class _ChurchListItemState extends State<ChurchListItem> {
 
   @override
   Widget build(BuildContext context) {
+    placeholderBuilder(
+        BuildContext context, Object exception, StackTrace? stackTrace) {
+      return Image.asset(
+        'assets/images/church_blurred.png',
+        fit: BoxFit.cover,
+      );
+    }
+
     return Center(
       child: Card(
+        clipBehavior: Clip.antiAlias,
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
             debugPrint('Card tapped.');
           },
           child: SizedBox(
-            height: 100,
-            child: Row(
-              children: [
-                Image.network(widget.church.imageUrl ?? ""),
-                Center(child: Text(widget.church.name ?? "")),
-              ]
-            )
-          ),
+              height: 176,
+              child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                        flex: 2,
+                        child: Column(children: [
+                          Text(widget.church.name ?? ""),
+                          Text(widget.church.commonName ?? ""),
+                        ])),
+                    Expanded(
+                      flex: 1,
+                      child: FadeInImage.assetNetwork(
+                        image: widget.church.imageUrl ?? "",
+                        fit: BoxFit.cover,
+                        placeholder: 'assets/images/church_blurred.png',
+                        imageErrorBuilder: placeholderBuilder,
+                      ),
+                    ),
+                  ])),
         ),
       ),
     );
