@@ -41,7 +41,9 @@ class MassListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(massWithChurch.church.name ?? "?"),
-                Text(massWithChurch.mass.time ?? "?"),
+                Text(
+                    massWithChurch.mass.time ?? "?",
+                    style: Theme.of(context).textTheme.headline4),
               ],
             ),
           ),
