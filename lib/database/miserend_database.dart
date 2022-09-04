@@ -74,8 +74,8 @@ class MiserendDatabase {
       tags: map['milyen'],
       period: map['periodus'],
       weight: map['suly'],
-      fromDate: map['datumtol'],
-      toDate: map['datumig'],
+      startDate: map['datumtol'],
+      endDate: map['datumig'],
       comment: map['megjegyzes'],
     );
   }

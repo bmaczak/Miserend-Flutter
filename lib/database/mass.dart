@@ -8,8 +8,8 @@ class Mass {
   final String? tags;
   final String? period;
   final int? weight;
-  final int? fromDate;
-  final int? toDate;
+  final int? startDate;
+  final int? endDate;
   final String? comment;
 
   Mass({
@@ -22,8 +22,8 @@ class Mass {
       required this.tags,
       required this.period,
       required this.weight,
-      required this.fromDate,
-      required this.toDate,
+      required this.startDate,
+      required this.endDate,
       required this.comment
   });
 }

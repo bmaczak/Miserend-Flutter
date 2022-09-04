@@ -6,6 +6,7 @@ import 'package:miserend/mass_list_item.dart';
 
 import 'database/mass.dart';
 import 'database/miserend_database.dart';
+import 'mass_filter.dart';
 
 class NearMassesPage extends StatefulWidget {
   const NearMassesPage({super.key});
@@ -43,6 +44,7 @@ class _NearMassesPageState extends State<NearMassesPage>  with
     MiserendDatabase db = await MiserendDatabase.create();
     Position position = await LocationProvider.getPosition();
     var list = await db.getCloseMasses(position.latitude, position.longitude);
+    list = MassFilter.filterMassWithChurchListForDay(list, DateTime.now());
     setState(() {
       masses = list;
     });
