@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -20,7 +21,16 @@ class MiserendDatabase {
 
   Future<List<Church>> getAllChurches() async {
     final List<Map<String, dynamic>> maps = await db.query('templomok');
+    return _mapToChurchList(maps);
+  }
 
+  Future<List<Church>> getCloseChurches(double latitude, double longitude) async {
+    String query = 'SELECT *,((lng-($longitude))*(lng-($longitude)) + (lat-($latitude))*(lat-($latitude))) AS len FROM templomok WHERE lng != 0 AND lat != 0 ORDER BY len ASC';
+    final List<Map<String, dynamic>> maps = await db.rawQuery(query);
+    return _mapToChurchList(maps);
+  }
+
+  List<Church> _mapToChurchList(List<Map<String, dynamic>> maps) {
     return List.generate(maps.length, (i) {
       return Church(
           id: maps[i]['tid'],
