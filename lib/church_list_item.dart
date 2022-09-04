@@ -47,10 +47,23 @@ class _ChurchListItemState extends State<ChurchListItem> {
                                 child: Text(widget.church.name ?? "",
                                     style: Theme.of(context).textTheme.subtitle1),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-                                child: Text(widget.church.commonName ?? "",
-                                    style: Theme.of(context).textTheme.subtitle2),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                                  child: Text(widget.church.commonName ?? "",
+                                      style: Theme.of(context).textTheme.subtitle2),
+                                ),
+                              ),
+                              Container(color: Colors.grey, height: 1),
+                              IconButton(
+                                icon: const Icon(Icons.favorite_border),
+                                color: Colors.grey,
+                                tooltip: 'Toggle favorite',
+                                onPressed: () {
+                                  setState(() {
+                                    _toggleFavorites();
+                                  });
+                                },
                               ),
                             ])),
                     Expanded(
@@ -66,5 +79,9 @@ class _ChurchListItemState extends State<ChurchListItem> {
         ),
       ),
     );
+  }
+
+  _toggleFavorites() {
+
   }
 }

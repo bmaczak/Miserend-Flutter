@@ -33,8 +33,9 @@ class LocationProvider {
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
+    var lastKnown = await Geolocator.getLastKnownPosition(forceAndroidLocationManager: true);
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true);
+    return lastKnown ?? await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true);
   }
 }

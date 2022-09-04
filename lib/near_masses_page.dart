@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:miserend/LocationProvider.dart';
+import 'package:miserend/location_provider.dart';
 import 'package:miserend/database/MassWithChurch.dart';
 import 'package:miserend/mass_list_item.dart';
 

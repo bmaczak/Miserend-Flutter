@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:miserend/LocationProvider.dart';
+import 'package:miserend/location_provider.dart';
 import 'package:miserend/church_list_item.dart';
 
 import 'database/church.dart';
@@ -27,14 +27,17 @@ class _NearChurchesPageState extends State<NearChurchesPage>  with
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        padding: const EdgeInsets.all(8),
-        itemCount: churches.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ChurchListItem(
-              church: churches[index]
-          );
-        },
+    return Container(
+      color: Colors.black12,
+      child: ListView.builder(
+          padding: const EdgeInsets.all(8),
+          itemCount: churches.length,
+          itemBuilder: (BuildContext context, int index) {
+            return ChurchListItem(
+                church: churches[index]
+            );
+          },
+      ),
     );
   }
 
