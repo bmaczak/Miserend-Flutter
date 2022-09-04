@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:miserend/near_masses_page.dart';
 
 import 'churches_page.dart';
-import 'near_churches_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,10 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     ChurchesPage(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
+    NearMassesPage(),
     Text(
       'Index 2: School',
       style: optionStyle,

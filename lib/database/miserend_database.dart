@@ -1,8 +1,10 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:miserend/database/MassWithChurch.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'church.dart';
+import 'mass.dart';
 
 class MiserendDatabase {
   static const String databaseName = "miserend.sqlite3";
@@ -30,22 +32,51 @@ class MiserendDatabase {
     return _mapToChurchList(maps);
   }
 
+  Future<List<MassWithChurch>> getCloseMasses(double latitude, double longitude) async {
+    String query = 'select *,((templomok.lng-($longitude))*(templomok.lng-($longitude)) + (templomok.lat-($latitude))*(templomok.lat-($latitude))) AS len from misek inner join templomok on misek.tid = templomok.tid WHERE templomok.lng != 0 AND templomok.lat != 0 ORDER BY len ASC LIMIT 500';
+    final List<Map<String, dynamic>> maps = await db.rawQuery(query);
+    return List.generate(maps.length, (i) {
+      return MassWithChurch(_mapToChurch(maps[i]), _mapToMass(maps[i]));
+    });
+  }
+
   List<Church> _mapToChurchList(List<Map<String, dynamic>> maps) {
     return List.generate(maps.length, (i) {
-      return Church(
-          id: maps[i]['tid'],
-          name: maps[i]['nev'],
-          commonName: maps[i]['ismertnev'],
-          isGreek: maps[i]['gorog'] == 1,
-          lat: maps[i]['lat'],
-          lon: maps[i]['lng'],
-          address: maps[i]['geocim'],
-          city: maps[i]['varos'],
-          country: maps[i]['orszag'],
-          county: maps[i]['megye'],
-          street: maps[i]['cim'],
-          gettingThere: maps[i]['megkozelites'],
-          imageUrl: maps[i]['kep']);
+      return _mapToChurch(maps[i]);
     });
+  }
+
+  Church _mapToChurch(Map<String, dynamic> map) {
+    return Church(
+        id: map['tid'],
+        name: map['nev'],
+        commonName: map['ismertnev'],
+        isGreek: map['gorog'] == 1,
+        lat: map['lat'],
+        lon: map['lng'],
+        address: map['geocim'],
+        city: map['varos'],
+        country: map['orszag'],
+        county: map['megye'],
+        street: map['cim'],
+        gettingThere: map['megkozelites'],
+        imageUrl: map['kep']);
+  }
+
+  Mass _mapToMass(Map<String, dynamic> map) {
+    return Mass(
+      id: map['mid'],
+      churchId: map['tid'],
+      day: map['nap'],
+      time: map['ido'],
+      season: map['idoszak'],
+      language: map['nyelv'],
+      tags: map['milyen'],
+      period: map['periodus'],
+      weight: map['suly'],
+      fromDate: map['datumtol'],
+      toDate: map['datumig'],
+      comment: map['megjegyzes'],
+    );
   }
 }
