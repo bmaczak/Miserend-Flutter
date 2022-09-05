@@ -1,7 +1,7 @@
 class Mass {
-  final int id;
-  final int churchId;
-  final int day;
+  final int? id;
+  final int? churchId;
+  final int? day;
   final String? time;
   final String? season;
   final String? language;

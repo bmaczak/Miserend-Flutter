@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:miserend/database/church_with_masses.dart';
 
-import 'package:miserend/database/favorite.dart';
-import 'package:miserend/database/local_database.dart';
 import 'package:provider/provider.dart';
 
 import 'church_list_item.dart';
-import 'database/church.dart';
 import 'database/favorites_service.dart';
 import 'database/miserend_database.dart';
 
@@ -19,7 +17,7 @@ class FavoriteChurchesPage extends StatefulWidget {
 class _FavoriteChurchesPageState extends State<FavoriteChurchesPage>
     with AutomaticKeepAliveClientMixin<FavoriteChurchesPage> {
 
-  List<Church> churches = <Church>[];
+  List<ChurchWithMasses> churches = <ChurchWithMasses>[];
 
   late FavoritesService favoritesService;
 
@@ -46,7 +44,7 @@ class _FavoriteChurchesPageState extends State<FavoriteChurchesPage>
             itemCount: favoritesService.favorites.length,
             itemBuilder: (BuildContext context, int index) {
               return ChurchListItem(
-                  church: churches[index]
+                  churchWithMasses: churches[index]
               );
             },
           )

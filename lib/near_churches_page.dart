@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:miserend/database/church_with_masses.dart';
 import 'package:miserend/location_provider.dart';
 import 'package:miserend/church_list_item.dart';
 
@@ -18,7 +19,7 @@ class _NearChurchesPageState extends State<NearChurchesPage>  with
     AutomaticKeepAliveClientMixin<NearChurchesPage>{
 
   late Position _currentPosition;
-  List<Church> churches = <Church>[];
+  List<ChurchWithMasses> churches = <ChurchWithMasses>[];
 
   @override
   void initState() {
@@ -35,7 +36,7 @@ class _NearChurchesPageState extends State<NearChurchesPage>  with
           itemCount: churches.length,
           itemBuilder: (BuildContext context, int index) {
             return ChurchListItem(
-                church: churches[index]
+                churchWithMasses: churches[index]
             );
           },
       ),
@@ -45,7 +46,7 @@ class _NearChurchesPageState extends State<NearChurchesPage>  with
   Future<void> loadChurches() async {
     MiserendDatabase db = await MiserendDatabase.create();
     Position position = await LocationProvider.getPosition();
-    var list = await db.getCloseChurches(position.latitude, position.longitude);
+    var list = await db.getCloseChurchesWithMasses(position.latitude, position.longitude);
     setState(() {
       churches = list;
     });
