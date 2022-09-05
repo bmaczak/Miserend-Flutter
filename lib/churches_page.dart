@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:miserend/near_churches_page.dart';
 
+import 'favorite_churches.dart';
+
 const List<Tab> tabs = <Tab>[
   Tab(text: 'Közeli'),
   Tab(text: 'Kedvencek'),
@@ -30,7 +32,7 @@ class ChurchesPage extends StatelessWidget {
               elevation: 4,
               child: Container(
                 color: Theme.of(context).primaryColor,
-                child: TabBar(
+                child: const TabBar(
                   tabs: tabs,
                   indicatorColor: Colors.white,
                 ),
@@ -40,7 +42,7 @@ class ChurchesPage extends StatelessWidget {
           body: const TabBarView(
             children: [
               NearChurchesPage(),
-              NearChurchesPage(),
+              FavoriteChurchesPage(),
             ],
           ),
         );

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:miserend/database/favorites_service.dart';
+import 'package:provider/provider.dart';
 
 import 'database/church.dart';
 
@@ -43,26 +45,37 @@ class _ChurchListItemState extends State<ChurchListItem> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0),
+                                padding: const EdgeInsets.fromLTRB(
+                                    8.0, 8.0, 8.0, 4.0),
                                 child: Text(widget.church.name ?? "",
-                                    style: Theme.of(context).textTheme.subtitle1),
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1),
                               ),
                               Expanded(
                                 child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                                  padding: const EdgeInsets.fromLTRB(
+                                      8.0, 0.0, 8.0, 8.0),
                                   child: Text(widget.church.commonName ?? "",
-                                      style: Theme.of(context).textTheme.subtitle2),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle2),
                                 ),
                               ),
                               Container(color: Colors.grey, height: 1),
-                              IconButton(
-                                icon: const Icon(Icons.favorite_border),
-                                color: Colors.grey,
-                                tooltip: 'Toggle favorite',
-                                onPressed: () {
-                                  setState(() {
-                                    _toggleFavorites();
-                                  });
+                              Consumer<FavoritesService>(
+                                builder: (context, favoritesService, child) {
+                                  return IconButton(
+                                    icon: favoritesService.isFavorite(widget.church.id)
+                                        ? const Icon(Icons.favorite)
+                                        : const Icon(Icons.favorite_border),
+                                    color: Colors.grey,
+                                    tooltip: 'Toggle favorite',
+                                    onPressed: () {
+                                      setState(() {
+                                        _toggleFavorites(widget.church.id);
+                                      });
+                                    },
+                                  );
                                 },
                               ),
                             ])),
@@ -81,7 +94,7 @@ class _ChurchListItemState extends State<ChurchListItem> {
     );
   }
 
-  _toggleFavorites() {
-
+  Future<void> _toggleFavorites(int churchId) async {
+    Provider.of<FavoritesService>(context, listen: false).toggle(churchId);
   }
 }

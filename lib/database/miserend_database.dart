@@ -26,6 +26,11 @@ class MiserendDatabase {
     return _mapToChurchList(maps);
   }
 
+  Future<List<Church>> getChurches(List<int> churchIds) async {
+    final List<Map<String, dynamic>> maps = await db.rawQuery('SELECT * FROM templomok WHERE tid IN (${churchIds.join(",")})');
+    return _mapToChurchList(maps);
+  }
+
   Future<List<Church>> getCloseChurches(double latitude, double longitude) async {
     String query = 'SELECT *,((lng-($longitude))*(lng-($longitude)) + (lat-($latitude))*(lat-($latitude))) AS len FROM templomok WHERE lng != 0 AND lat != 0 ORDER BY len ASC';
     final List<Map<String, dynamic>> maps = await db.rawQuery(query);

@@ -4,6 +4,7 @@ import 'package:miserend/location_provider.dart';
 import 'package:miserend/church_list_item.dart';
 
 import 'database/church.dart';
+import 'database/local_database.dart';
 import 'database/miserend_database.dart';
 
 class NearChurchesPage extends StatefulWidget {
