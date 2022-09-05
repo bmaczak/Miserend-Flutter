@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:miserend/church_details_page.dart';
 import 'package:miserend/database/favorites_service.dart';
 import 'package:provider/provider.dart';
 
@@ -14,25 +15,15 @@ class ChurchListItem extends StatefulWidget {
 }
 
 class _ChurchListItemState extends State<ChurchListItem> {
-  _ChurchListItemState();
-
   @override
   Widget build(BuildContext context) {
-    placeholderBuilder(
-        BuildContext context, Object exception, StackTrace? stackTrace) {
-      return Image.asset(
-        'assets/images/church_blurred.png',
-        fit: BoxFit.cover,
-      );
-    }
-
     return Center(
       child: Card(
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
-            debugPrint('Card tapped.');
+            _openDetails(widget.church, context);
           },
           child: SizedBox(
               height: 176,
@@ -49,14 +40,18 @@ class _ChurchListItemState extends State<ChurchListItem> {
                                     8.0, 8.0, 8.0, 4.0),
                                 child: Text(widget.church.name ?? "",
                                     style:
-                                        Theme.of(context).textTheme.subtitle1),
+                                    Theme
+                                        .of(context)
+                                        .textTheme
+                                        .subtitle1),
                               ),
                               Expanded(
                                 child: Padding(
                                   padding: const EdgeInsets.fromLTRB(
                                       8.0, 0.0, 8.0, 8.0),
                                   child: Text(widget.church.commonName ?? "",
-                                      style: Theme.of(context)
+                                      style: Theme
+                                          .of(context)
                                           .textTheme
                                           .subtitle2),
                                 ),
@@ -65,7 +60,8 @@ class _ChurchListItemState extends State<ChurchListItem> {
                               Consumer<FavoritesService>(
                                 builder: (context, favoritesService, child) {
                                   return IconButton(
-                                    icon: favoritesService.isFavorite(widget.church.id)
+                                    icon: favoritesService
+                                        .isFavorite(widget.church.id)
                                         ? const Icon(Icons.favorite)
                                         : const Icon(Icons.favorite_border),
                                     color: Colors.grey,
@@ -81,12 +77,15 @@ class _ChurchListItemState extends State<ChurchListItem> {
                             ])),
                     Expanded(
                       flex: 1,
-                      child: FadeInImage.assetNetwork(
+                      child: widget.church.imageUrl?.isNotEmpty ?? false
+                          ? FadeInImage.assetNetwork(
                         image: widget.church.imageUrl ?? "",
                         fit: BoxFit.cover,
                         placeholder: 'assets/images/church_blurred.png',
-                        imageErrorBuilder: placeholderBuilder,
-                      ),
+                        imageErrorBuilder: _errorBuilder,
+                      )
+                          : Image.asset('assets/images/church_blurred.png',
+                          fit: BoxFit.cover),
                     ),
                   ])),
         ),
@@ -96,5 +95,20 @@ class _ChurchListItemState extends State<ChurchListItem> {
 
   Future<void> _toggleFavorites(int churchId) async {
     Provider.of<FavoritesService>(context, listen: false).toggle(churchId);
+  }
+
+  _openDetails(Church church, BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ChurchDetailsPage(church: church)),
+    );
+  }
+
+  Widget _errorBuilder(BuildContext context, Object error,
+      StackTrace? stackTrace) {
+    return Image.asset(
+        'assets/images/church_blurred.png',
+        fit: BoxFit.cover);
   }
 }
