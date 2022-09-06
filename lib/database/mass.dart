@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
+
 class Mass {
   final int? id;
   final int? churchId;
   final int? day;
-  final String? time;
+  final TimeOfDay? time;
   final String? season;
   final String? language;
   final String? tags;
@@ -12,8 +14,8 @@ class Mass {
   final int? endDate;
   final String? comment;
 
-  Mass({
-      required this.id,
+  Mass(
+      {required this.id,
       required this.churchId,
       required this.day,
       required this.time,
@@ -25,5 +27,5 @@ class Mass {
       required this.startDate,
       required this.endDate,
       required this.comment
-  });
+      });
 }

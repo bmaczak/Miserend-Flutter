@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'database/MassWithChurch.dart';
 import 'database/mass.dart';
+import 'extentions.dart';
 
 class MassListItem extends StatelessWidget {
   const MassListItem({super.key, required this.massWithChurch});
@@ -42,7 +43,7 @@ class MassListItem extends StatelessWidget {
               children: [
                 Text(massWithChurch.church.name ?? "?"),
                 Text(
-                    massWithChurch.mass.time ?? "?",
+                    massWithChurch.mass.time?.to24hours() ?? "?",
                     style: Theme.of(context).textTheme.headline4),
               ],
             ),

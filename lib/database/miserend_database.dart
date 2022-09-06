@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:miserend/database/MassWithChurch.dart';
 import 'package:miserend/database/church_with_masses.dart';
 import 'package:path/path.dart';
@@ -10,6 +11,13 @@ import 'mass.dart';
 
 class MiserendDatabase {
   static const String databaseName = "miserend.sqlite3";
+  static const massesInnerQuery = '\'[\' || GROUP_CONCAT(\'{'
+      '"ido":"\' || m.ido || \'", '
+      '"nap":\' || m.nap || \', '
+      '"datumtol":\' || m.datumtol || \', '
+      '"datumig":\' || m.datumig || \', '
+      '"periodus":"\' || m.periodus || \'"'
+      '}\', \',\') || \']\' AS misek';
 
   late Database db;
 
@@ -31,12 +39,10 @@ class MiserendDatabase {
   Future<List<ChurchWithMasses>> getChurches(List<int> churchIds) async {
 
     String query =
-        'select t.*, \'[\' || GROUP_CONCAT(\'{"ido":"\' || m.ido || \'", "nap":\' || m.nap || \'}\', \',\') || \']\' AS misek '
-        'from templomok as t inner join misek as m on m.tid = t.tid '
-        'WHERE t.tid IN (${churchIds.join(",")}) '
-        'GROUP BY t.tid ';
+        'select t.*, ${massesInnerQuery} from templomok as t left join misek as m on m.tid = t.tid WHERE t.tid IN (${churchIds.join(",")}) GROUP BY t.tid ';
     final List<Map<String, dynamic>> maps = await db.rawQuery(query);
     return _mapToChurchWithMasses(maps);
+
   }
 
   Future<List<Church>> getCloseChurches(
@@ -59,15 +65,11 @@ class MiserendDatabase {
 
   Future<List<ChurchWithMasses>> getCloseChurchesWithMasses(
       double latitude, double longitude) async {
-    List<ChurchWithMasses> result = <ChurchWithMasses>[];
-    List<String> massFieldNames = <String>[
-      'ido', 'nap'
-    ];
 
     String query =
-        'select t.*, \'[\' || GROUP_CONCAT(\'{"ido":"\' || m.ido || \'", "nap":\' || m.nap || \'}\', \',\') || \']\' AS misek, '
+        'select t.*, $massesInnerQuery, '
         '((t.lng-($longitude))*(t.lng-($longitude)) + (t.lat-($latitude))*(t.lat-($latitude))) AS len '
-        'from templomok as t inner join misek as m on m.tid = t.tid '
+        'from templomok as t left join misek as m on m.tid = t.tid '
         'WHERE t.lng != 0 AND t.lat != 0 '
         'GROUP BY t.tid '
         'ORDER BY len';
@@ -78,8 +80,11 @@ class MiserendDatabase {
 
   List<ChurchWithMasses> _mapToChurchWithMasses(List<Map<String, dynamic>> maps) {
     return List.generate(maps.length, (i) {
-      final List t = json.decode(maps[i]['misek']);
-      final List<Mass> masses = t.map((item) => _mapToMass(item)).toList();
+      List<Mass> masses = <Mass>[];
+      if (maps[i]['misek'] != null) {
+        final List t = json.decode(maps[i]['misek']);
+        masses = t.map((item) => _mapToMass(item)).toList();
+      }
       return ChurchWithMasses(_mapToChurch(maps[i]), masses);
     });
   }
@@ -108,11 +113,13 @@ class MiserendDatabase {
   }
 
   Mass _mapToMass(Map<String, dynamic> map) {
+    String s = map['ido'];
+    TimeOfDay timeOfDay = TimeOfDay(hour:int.parse(s.split(":")[0]),minute: int.parse(s.split(":")[1]));
     return Mass(
       id: map['mid'],
       churchId: map['tid'],
       day: map['nap'],
-      time: map['ido'],
+      time: timeOfDay,
       season: map['idoszak'],
       language: map['nyelv'],
       tags: map['milyen'],
