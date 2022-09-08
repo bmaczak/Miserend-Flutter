@@ -1,4 +1,4 @@
-import 'package:miserend/database/MassWithChurch.dart';
+import 'package:miserend/database/mass_with_church.dart';
 
 import 'database/mass.dart';
 

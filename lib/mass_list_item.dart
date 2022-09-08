@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'database/MassWithChurch.dart';
+import 'database/mass_with_church.dart';
 import 'database/mass.dart';
 import 'extentions.dart';
 
