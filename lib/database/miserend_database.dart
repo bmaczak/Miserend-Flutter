@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:miserend/database/church.dart';
+import 'package:miserend/database/mass.dart';
 import 'package:miserend/database/mass_with_church.dart';
 import 'package:miserend/database/church_with_masses.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'church.dart';
-import 'mass.dart';
 
 class MiserendDatabase {
   static const String databaseName = "miserend.sqlite3";

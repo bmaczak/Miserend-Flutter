@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:miserend/near_churches_page.dart';
-
-import 'favorite_churches.dart';
+import 'package:miserend/home/churches/favorite_churches.dart';
+import 'package:miserend/home/churches/near_churches_page.dart';
 
 const List<Tab> tabs = <Tab>[
   Tab(text: 'Közeli'),

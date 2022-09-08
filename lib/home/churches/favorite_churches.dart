@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:miserend/database/church_with_masses.dart';
+import 'package:miserend/database/favorites_service.dart';
+import 'package:miserend/database/miserend_database.dart';
+import 'package:miserend/home/churches/church_list_item.dart';
 
 import 'package:provider/provider.dart';
-
-import 'church_list_item.dart';
-import 'database/favorites_service.dart';
-import 'database/miserend_database.dart';
 
 class FavoriteChurchesPage extends StatefulWidget {
   const FavoriteChurchesPage({super.key});

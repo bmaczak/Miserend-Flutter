@@ -1,13 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:miserend/database/church.dart';
+import 'package:miserend/colors.dart';
 import 'package:miserend/database/favorites_service.dart';
-import 'package:miserend/database/miserend_database.dart';
-import 'package:path/path.dart';
+import 'package:miserend/splash.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite/sqflite.dart';
-import 'colors.dart';
-import 'splash.dart';
 
 void main() {
   runApp(

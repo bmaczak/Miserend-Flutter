@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:miserend/database/church.dart';
 import 'package:miserend/database/favorites_service.dart';
 import 'package:provider/provider.dart';
-
-import 'database/church.dart';
 
 class ChurchDetailsPage extends StatefulWidget {
   const ChurchDetailsPage({super.key, required this.church});

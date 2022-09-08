@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:miserend/database/favorite.dart';
 import 'package:miserend/database/local_database.dart';
-
-import 'favorite.dart';
 
 class FavoritesService extends ChangeNotifier {
   late LocalDatabase localDatabase;

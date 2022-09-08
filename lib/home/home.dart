@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:miserend/near_masses_page.dart';
-
-import 'churches_page.dart';
-import 'map_page.dart';
+import 'package:miserend/home/churches/churches_page.dart';
+import 'package:miserend/home/masses/near_masses_page.dart';
+import 'package:miserend/home/map/map_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'extentions.dart';
+import 'package:miserend/extentions.dart';
 
 class TimeChip extends StatelessWidget {
   const TimeChip({super.key, required this.time});

@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:miserend/home/home.dart';
 import 'package:path/path.dart';
 import "package:sqflite/sqflite.dart";
-import 'home.dart';
 
 class RouteSplash extends StatefulWidget {
   const RouteSplash({super.key});
@@ -42,7 +42,7 @@ class _RouteSplashState extends State<RouteSplash> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: CircularProgressIndicator()//show splash screen here instead of progress indicator
       ),

@@ -9,8 +9,8 @@ import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:miserend/database/church.dart';
 import 'package:miserend/database/miserend_database.dart';
+import 'package:miserend/location_provider.dart';
 
-import 'location_provider.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});

@@ -1,5 +1,5 @@
-import 'church.dart';
-import 'mass.dart';
+import 'package:miserend/database/church.dart';
+import 'package:miserend/database/mass.dart';
 
 class MassWithChurch {
   final Church church;

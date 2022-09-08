@@ -1,7 +1,6 @@
+import 'package:miserend/database/favorite.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
-import 'favorite.dart';
 
 class LocalDatabase {
   static const String databaseName = "localdatabase.sqlite3";

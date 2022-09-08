@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:miserend/church_details_page.dart';
+import 'package:miserend/church_details/church_details_page.dart';
+import 'package:miserend/database/church.dart';
 import 'package:miserend/database/church_with_masses.dart';
 import 'package:miserend/database/favorites_service.dart';
-import 'package:miserend/time_chip.dart';
+import 'package:miserend/database/mass.dart';
+import 'package:miserend/mass_filter.dart';
+import 'package:miserend/widgets/time_chip.dart';
 import 'package:provider/provider.dart';
-
-import 'database/church.dart';
-import 'database/mass.dart';
-import 'mass_filter.dart';
 
 class ChurchListItem extends StatefulWidget {
   const ChurchListItem({super.key, required this.churchWithMasses});

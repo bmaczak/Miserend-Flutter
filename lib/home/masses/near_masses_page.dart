@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:miserend/database/miserend_database.dart';
 import 'package:miserend/location_provider.dart';
 import 'package:miserend/database/mass_with_church.dart';
-import 'package:miserend/mass_list_item.dart';
+import 'package:miserend/home/masses/mass_list_item.dart';
+import 'package:miserend/mass_filter.dart';
 
-import 'database/mass.dart';
-import 'database/miserend_database.dart';
-import 'mass_filter.dart';
 
 class NearMassesPage extends StatefulWidget {
   const NearMassesPage({super.key});
@@ -29,6 +28,7 @@ class _NearMassesPageState extends State<NearMassesPage>  with
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ListView.builder(
       padding: const EdgeInsets.all(8),
       itemCount: masses.length,

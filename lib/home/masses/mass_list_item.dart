@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'database/mass_with_church.dart';
-import 'database/mass.dart';
-import 'extentions.dart';
+import 'package:miserend/database/mass_with_church.dart';
+import 'package:miserend/extentions.dart';
 
 class MassListItem extends StatelessWidget {
   const MassListItem({super.key, required this.massWithChurch});
