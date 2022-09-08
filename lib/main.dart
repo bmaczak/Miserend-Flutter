@@ -6,6 +6,7 @@ import 'package:miserend/database/miserend_database.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'colors.dart';
 import 'splash.dart';
 
 void main() {
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         backgroundColor: Colors.grey,
-        primarySwatch: Colors.blue,
+        primarySwatch: CustomColors.purple,
       ),
       home: const RouteSplash(),
     );
