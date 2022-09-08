@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:miserend/near_masses_page.dart';
 
 import 'churches_page.dart';
+import 'map_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,10 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     ChurchesPage(),
     NearMassesPage(),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
+    MapPage(),
   ];
 
   void _onItemTapped(int index) {
