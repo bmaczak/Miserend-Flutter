@@ -8,7 +8,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:miserend/database/church.dart';
+import 'package:miserend/database/church_with_masses.dart';
 import 'package:miserend/database/miserend_database.dart';
+import 'package:miserend/home/churches/church_list_item.dart';
 import 'package:miserend/location_provider.dart';
 
 
@@ -31,6 +33,7 @@ class _MapPageState extends State<MapPage> {
   late BitmapDescriptor customIcon;
   late ui.Image markerImage;
   late Color clusterColor;
+  ChurchWithMasses? selectedChurch;
 
   @override
   void initState() {
@@ -47,18 +50,30 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-        initialCameraPosition: initialPosition,
-        mapType: MapType.normal,
-        myLocationButtonEnabled: true,
-        myLocationEnabled: true,
-        markers: markers,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-          _manager.setMapId(controller.mapId);
-        },
-        onCameraMove: _manager.onCameraMove,
-        onCameraIdle: _manager.updateMap);
+    return Stack(
+      children: [GoogleMap(
+          initialCameraPosition: initialPosition,
+          mapType: MapType.normal,
+          myLocationButtonEnabled: true,
+          myLocationEnabled: true,
+          markers: markers,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+            _manager.setMapId(controller.mapId);
+          },
+          onCameraMove: _manager.onCameraMove,
+          onCameraIdle: _manager.updateMap),
+        selectedChurch != null ? Column(
+          children: [
+            Expanded(child: Container()),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ChurchListItem(churchWithMasses: selectedChurch!),
+            ),
+          ],
+        ) : Container()
+      ]
+    );
   }
 
   Future<void> _loadMarkers() async {
@@ -82,7 +97,9 @@ class _MapPageState extends State<MapPage> {
         return Marker(
           markerId: MarkerId(cluster.getId()),
           position: cluster.location,
-          onTap: () {},
+          onTap: () {
+            _onTapped(cluster);
+          },
           icon: cluster.isMultiple ? await _getMarkerBitmap(125,
               text:  cluster.count.toString()) : customIcon,
         );
@@ -123,4 +140,19 @@ class _MapPageState extends State<MapPage> {
     final data = await rootBundle.load('assets/images/$imageName');
     return decodeImageFromList(data.buffer.asUint8List());
   }
+
+  _onTapped(Cluster<Church> cluster) {
+    print('clicled ${cluster.items.length}');
+    if (!cluster.isMultiple) {
+      _showChurchCard(cluster.items.first);
+    }
+  }
+
+  Future<void> _showChurchCard(Church church) async {
+    ChurchWithMasses churchWithMasses = (await (await MiserendDatabase.create()).getChurches(<int>[church.id])).first;
+    setState(() {
+      selectedChurch = churchWithMasses;
+    });
+  }
+
 }
