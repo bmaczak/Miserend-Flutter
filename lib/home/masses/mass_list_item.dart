@@ -34,16 +34,19 @@ class MassListItem extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(massWithChurch.church.name ?? "?"),
-                Text(
-                    massWithChurch.mass.time?.to24hours() ?? "?",
-                    style: Theme.of(context).textTheme.headline4),
-              ],
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(massWithChurch.church.name ?? "?",
+                      overflow: TextOverflow.ellipsis),
+                  Text(
+                      massWithChurch.mass.time?.to24hours() ?? "?",
+                      style: Theme.of(context).textTheme.headline4),
+                ],
+              ),
             ),
           ),
         ],
