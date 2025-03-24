@@ -43,7 +43,7 @@ class _ChurchListItemState extends State<ChurchListItem> {
                                     8.0, 8.0, 8.0, 4.0),
                                 child: Text(church.name ?? "",
                                     style:
-                                        Theme.of(context).textTheme.subtitle1),
+                                        Theme.of(context).textTheme.titleLarge),
                               ),
                               Expanded(
                                 child: Padding(
@@ -52,7 +52,7 @@ class _ChurchListItemState extends State<ChurchListItem> {
                                   child: Text(church.commonName ?? "",
                                       style: Theme.of(context)
                                           .textTheme
-                                          .subtitle2),
+                                          .titleMedium),
                                 ),
                               ),
                               Padding(

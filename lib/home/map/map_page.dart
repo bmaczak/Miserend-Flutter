@@ -5,7 +5,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:miserend/database/church.dart';
 import 'package:miserend/database/church_with_masses.dart';
@@ -28,8 +27,7 @@ class _MapPageState extends State<MapPage> {
   );
 
   final Completer<GoogleMapController> _controller = Completer();
-  late ClusterManager _manager;
-  Set<Marker> markers = {};
+  final Map<String, Marker> _markers = {};
   late BitmapDescriptor customIcon;
   late ui.Image markerImage;
   late Color clusterColor;
@@ -38,14 +36,11 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    _manager = ClusterManager<Church>({}, _updateMarkers,
-        markerBuilder: _markerBuilder);
     BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(size: Size(32, 32)), 'assets/images/map_pin.png')
         .then((onValue) {
       customIcon = onValue;
     });
-    _loadMarkers();
   }
 
   @override
@@ -56,13 +51,8 @@ class _MapPageState extends State<MapPage> {
           mapType: MapType.normal,
           myLocationButtonEnabled: true,
           myLocationEnabled: true,
-          markers: markers,
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-            _manager.setMapId(controller.mapId);
-          },
-          onCameraMove: _manager.onCameraMove,
-          onCameraIdle: _manager.updateMap),
+          markers: _markers.values.toSet(),
+          onMapCreated: _onMapCreated),
         selectedChurch != null ? Column(
           children: [
             Expanded(child: Container()),
@@ -76,34 +66,33 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  Future<void> _loadMarkers() async {
+  Future<void> _onMapCreated(GoogleMapController controller) async {
     markerImage = await loadImage('map_pin.png');
+    MiserendDatabase database = await MiserendDatabase.create();
+    final churches = await database.getAllChurches();
+    _setDefaultPosition();
+    setState(() {
+      _markers.clear();
+      for (final church in churches) {
+        final marker = Marker(
+          markerId: MarkerId(church.id.toString()),
+          position: church.location,
+          onTap: () {
+            _onTapped(church);
+          },
+        );
+        _markers[church.id.toString()] = marker;
+      }
+    });
+  }
+
+  Future<void> _setDefaultPosition() async {
     final GoogleMapController controller = await _controller.future;
     Position position = await LocationProvider.getPosition();
     controller.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(
         target: LatLng(position.latitude, position.longitude), zoom: 14)));
-    MiserendDatabase database = await MiserendDatabase.create();
-    _manager.setItems(await database.getAllChurches());
   }
 
-  void _updateMarkers(Set<Marker> markers) {
-    setState(() {
-      this.markers = markers;
-    });
-  }
-
-  Future<Marker> Function(Cluster<Church>) get _markerBuilder =>
-      (cluster) async {
-        return Marker(
-          markerId: MarkerId(cluster.getId()),
-          position: cluster.location,
-          onTap: () {
-            _onTapped(cluster);
-          },
-          icon: cluster.isMultiple ? await _getMarkerBitmap(125,
-              text:  cluster.count.toString()) : customIcon,
-        );
-      };
 
   Future<BitmapDescriptor> _getMarkerBitmap(int size, {String? text}) async {
     final PictureRecorder pictureRecorder = PictureRecorder();
@@ -141,11 +130,8 @@ class _MapPageState extends State<MapPage> {
     return decodeImageFromList(data.buffer.asUint8List());
   }
 
-  _onTapped(Cluster<Church> cluster) {
-    print('clicled ${cluster.items.length}');
-    if (!cluster.isMultiple) {
-      _showChurchCard(cluster.items.first);
-    }
+  _onTapped(Church church) {
+     _showChurchCard(church);
   }
 
   Future<void> _showChurchCard(Church church) async {
