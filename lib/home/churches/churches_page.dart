@@ -33,6 +33,8 @@ class ChurchesPage extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
                 child: const TabBar(
                   tabs: tabs,
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.white60,
                   indicatorColor: Colors.white,
                 ),
               ),
