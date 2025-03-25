@@ -15,7 +15,7 @@ class TimeChip extends StatelessWidget {
           color: const Color.fromARGB(255, 255, 140, 0),
           child: Padding(
             padding: const EdgeInsets.all(4.0),
-            child: Text(time?.to24hours() ?? "?"),
+            child: Text(time?.to24hours() ?? "?", style: Theme.of(context).textTheme.bodyMedium?.apply(color: Colors.white)),
           )),
     );
   }

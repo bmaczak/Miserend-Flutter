@@ -63,6 +63,13 @@ class MiserendDatabase {
     });
   }
 
+  Future<List<Mass>> getMassesForChurch(
+      int churchId) async {
+    String query = 'select * from misek where tid = $churchId';
+    final List<Map<String, dynamic>> maps = await db.rawQuery(query);
+    return _mapToMassList(maps);
+  }
+
   Future<List<ChurchWithMasses>> getCloseChurchesWithMasses(
       double latitude, double longitude) async {
 
@@ -110,6 +117,12 @@ class MiserendDatabase {
         street: map['cim'],
         gettingThere: map['megkozelites'],
         imageUrl: map['kep']);
+  }
+
+  List<Mass> _mapToMassList(List<Map<String, dynamic>> maps) {
+    return List.generate(maps.length, (i) {
+      return _mapToMass(maps[i]);
+    });
   }
 
   Mass _mapToMass(Map<String, dynamic> map) {
