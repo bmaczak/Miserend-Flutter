@@ -36,6 +36,21 @@ class MiserendDatabase {
     return _mapToChurchList(maps);
   }
 
+  Future<List<Church>> getChurchesForSearchTerm(String searchTerm) async {
+    String query = 'select * from templomok WHERE nev like \'%${searchTerm}%\' '
+        'or ismertnev like \'%${searchTerm}%\'';
+    final List<Map<String, dynamic>> maps = await db.rawQuery(query);
+    return _mapToChurchList(maps);
+  }
+
+  Future<List<String>> getCitiesForSearchTerm(String searchTerm) async {
+    String query = 'select distinct varos from templomok WHERE varos like \'%${searchTerm}%\'';
+    final List<Map<String, dynamic>> maps = await db.rawQuery(query);
+    return  List.generate(maps.length, (i) {
+      return maps[i]['varos'];
+    });
+  }
+
   Future<List<ChurchWithMasses>> getChurches(List<int> churchIds) async {
 
     String query =
