@@ -123,13 +123,13 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 48,
             child: SearchAnchor.bar(
               isFullScreen: false,
-            onChanged: _onSearchChanged,
-            searchController: _searchController,
-            suggestionsBuilder: (BuildContext context, SearchController controller) {
-              return List<Widget>.generate(suggestions.length, (int index) {
-                return suggestions[index].buildWidget(context);
-              });
-            },
+              onChanged: _onSearchChanged,
+              searchController: _searchController,
+              suggestionsBuilder: (BuildContext context, SearchController controller) {
+                return List<Widget>.generate(suggestions.length, (int index) {
+                  return suggestions[index].buildWidget(context);
+                });
+              },
             ),
           ),
         ),
@@ -162,17 +162,27 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onSearchChanged(String value) async {
-    MiserendDatabase db = await MiserendDatabase.create();
-    var churches = await db.getChurchesForSearchTerm(value);
-    var cities = await db.getCitiesForSearchTerm(value);
-    var combined = <Suggestion>[];
-    combined.addAll(churches.take(20).map((c) => ChurchSuggestion(c)));
-    combined.addAll(cities.map((c) => CitySuggestion(c)));
-    setState(() {
-      suggestions = combined;
-      var value = _searchController.text;
-      _searchController.text = "";
-      _searchController.text = value;
-    });
+    if (value.length > 2) {
+      MiserendDatabase db = await MiserendDatabase.create();
+      var churches = await db.getChurchesForSearchTerm(value);
+      var cities = await db.getCitiesForSearchTerm(value);
+      var combined = <Suggestion>[];
+      combined.addAll(churches.take(20).map((c) => ChurchSuggestion(c)));
+      combined.addAll(cities.map((c) => CitySuggestion(c)));
+      setState(() {
+        suggestions = combined;
+        var value = _searchController.text;
+        _searchController.text = "";
+        _searchController.text = value;
+      });
+    }
+    else{
+      setState(() {
+        suggestions.clear();
+        var value = _searchController.text;
+        _searchController.text = "";
+        _searchController.text = value;
+      });
+    }
   }
 }
