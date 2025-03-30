@@ -51,6 +51,20 @@ class MiserendDatabase {
     });
   }
 
+  Future<List<ChurchWithMasses>> getChurchesWithMassesForSearchTerm(String searchTerm) async {
+    String query = 'select t.*, ${massesInnerQuery} from templomok as t left join misek as m on m.tid = t.tid WHERE t.nev like \'%${searchTerm}%\' '
+        'or t.ismertnev like \'%${searchTerm}%\' GROUP BY t.tid';
+    final List<Map<String, dynamic>> maps = await db.rawQuery(query);
+    return _mapToChurchWithMasses(maps);
+  }
+
+  Future<List<ChurchWithMasses>> getChurchesWithMassesForCity(String city) async {
+    String query = 'select t.*, ${massesInnerQuery} from templomok as t left join misek as m on m.tid = t.tid WHERE t.varos = \'${city}\' '
+        'GROUP BY t.tid';
+    final List<Map<String, dynamic>> maps = await db.rawQuery(query);
+    return _mapToChurchWithMasses(maps);
+  }
+
   Future<List<ChurchWithMasses>> getChurches(List<int> churchIds) async {
 
     String query =

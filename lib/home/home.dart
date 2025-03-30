@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:miserend/home/churches/churches_page.dart';
+import 'package:miserend/home/churches/search_results.dart';
 import 'package:miserend/home/masses/near_masses_page.dart';
 import 'package:miserend/home/map/map_page.dart';
 
@@ -71,6 +72,13 @@ class CitySuggestion extends Suggestion {
   @override
   Widget buildWidget(BuildContext context) {
     return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+          builder: (context) => SearchResultsPage(searchParams: SearchParams.fromCity(cityName))),
+        );
+      },
         titleAlignment: ListTileTitleAlignment.center,
         leading:  AspectRatio(
           aspectRatio: 1,
@@ -124,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: SearchAnchor.bar(
               isFullScreen: false,
               onChanged: _onSearchChanged,
+              onSubmitted: _onSearchSubmitted,
               searchController: _searchController,
               suggestionsBuilder: (BuildContext context, SearchController controller) {
                 return List<Widget>.generate(suggestions.length, (int index) {
@@ -184,5 +193,13 @@ class _HomeScreenState extends State<HomeScreen> {
         _searchController.text = value;
       });
     }
+  }
+
+  void _onSearchSubmitted(String value) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => SearchResultsPage(searchParams: SearchParams.fromSearchTerm(value))),
+    );
   }
 }
