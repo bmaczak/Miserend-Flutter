@@ -11,6 +11,7 @@ import '../database/miserend_database.dart';
 import '../mass_filter.dart';
 import '../widgets/time_chip.dart';
 import 'package:intl/intl.dart';
+import 'package:map_launcher/map_launcher.dart';
 
 class ChurchDetailsPage extends StatefulWidget {
   const ChurchDetailsPage({super.key, required this.church});
@@ -140,12 +141,15 @@ class _ChurchDetailsPageState extends State<ChurchDetailsPage> {
               ],
             ),
           ),
-          Column(
-            spacing: 8,
-            children: [
-              Icon(Icons.error, size: 32, color: Colors.black54),
-              Text("Hibajelentés")
-            ],
+          GestureDetector(
+            onTap: _showReportPopup,
+            child: Column(
+              spacing: 8,
+              children: [
+                Icon(Icons.error, size: 32, color: Colors.black54),
+                Text("Hibajelentés")
+              ],
+            ),
           )
         ],
       ),
@@ -239,25 +243,34 @@ class _ChurchDetailsPageState extends State<ChurchDetailsPage> {
                 Text("Megközelítés",
                     style: Theme.of(context).textTheme.titleLarge),
               ),
-              Stack(
-                  alignment: Alignment.center,
-                  children: [
-                Image.network(_getStaticMapUrl(800, 600)),
-                Column(
-                  children: [
-                    Image.asset("assets/images/map_pin.png", width: 37, height: 57),
-                    SizedBox(width: 37, height: 57),
-                  ],
-                )
-              ]),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(HtmlUnescape().convert(widget.church.gettingThere ?? "")),
+              GestureDetector(
+                onTap: _showLocationOnMap,
+                child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                  Image.network(_getStaticMapUrl(800, 600)),
+                  Column(
+                    children: [
+                      Image.asset("assets/images/map_pin.png", width: 37, height: 57),
+                      SizedBox(width: 37, height: 57),
+                    ],
+                  )
+                ]),
+              ),
+              Visibility(
+                visible: widget.church.gettingThere != null,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(HtmlUnescape().convert(widget.church.gettingThere ?? "")),
+                ),
               ),
               Container(height: 1, color: Colors.black12,),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text("ÚTVONAL", style: Theme.of(context).textTheme.titleMedium!.apply(color: Color.fromARGB(255, 255, 140, 0))),
+              GestureDetector(
+                onTap: _showDirectionsOnMap,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text("ÚTVONAL", style: Theme.of(context).textTheme.titleMedium!.apply(color: Color.fromARGB(255, 255, 140, 0))),
+                ),
               ),
             ],
           ),
@@ -291,6 +304,9 @@ class _ChurchDetailsPageState extends State<ChurchDetailsPage> {
     });
   }
 
+  void _showReportPopup(){
+    
+  }
 
 
   String _getStaticMapUrl(int width, int height)
@@ -300,5 +316,22 @@ class _ChurchDetailsPageState extends State<ChurchDetailsPage> {
   {
     return MassFilter.filterMassListForDay(
         allMasses, DateTime.now().add(Duration(days: offsetInDays)));
+  }
+
+  void _showLocationOnMap() async {
+    final availableMaps = await MapLauncher.installedMaps;
+    await availableMaps.first.showMarker(
+      coords: Coords(widget.church.lat!, widget.church.lon!),
+      title: widget.church.name ?? "",
+      description: widget.church.commonName ?? "",
+    );
+  }
+
+  void _showDirectionsOnMap() async {
+    final availableMaps = await MapLauncher.installedMaps;
+    await availableMaps.first.showDirections(
+      destination: Coords(widget.church.lat!, widget.church.lon!),
+      destinationTitle: widget.church.name ?? ""
+    );
   }
 }
