@@ -1,9 +1,7 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:miserend/database/database_manager.dart';
 import 'package:miserend/home/home.dart';
-import 'package:path/path.dart';
-import "package:sqflite/sqflite.dart";
 
 class RouteSplash extends StatefulWidget {
   const RouteSplash({super.key});
@@ -15,15 +13,54 @@ class RouteSplash extends StatefulWidget {
 class _RouteSplashState extends State<RouteSplash> {
   bool shouldProceed = false;
 
-  _fetchPrefs() async {
-    bool fileExists = await File(join(await getDatabasesPath(), 'miserend.sqlite3')).exists();
-    if (fileExists) {
+  _checkDatabase() async {
+    bool fileExists = await DatabaseManager.databaseExists;
+    if (!fileExists) {
+      _showDialog(
+        "Adatabázis nem taláható",
+        "Az alkalmazás használatához szükség van az adatbázis letöltésére. Letölti most?",
+        true,
+      );
+      return;
+    }
+
+    bool databaseVersionCompatible =
+        await DatabaseManager.checkDatabaseVersion();
+    if (!databaseVersionCompatible) {
+      _showDialog(
+        "Adatbázis nem megfelelő",
+        "Az alkalmazás használatához szükség van az adatbázis letöltésére. Letölti most?",
+        true,
+      );
+      return;
+    }
+
+    bool isDatabaseUpToDate = await DatabaseManager.isDatabaseUpToDate();
+    if (!isDatabaseUpToDate) {
+      _showDialog(
+        "Frissítés elérhető",
+        "Elérhető frisebb adatbázis. Letölti most?",
+        false,
+      );
+      return;
+    }
+
+    _goToMainScreen();
+  }
+
+  _downloadDatabase() async {
+    bool success = await DatabaseManager.downloadDatabase();
+    if (success) {
+      if (context.mounted) {
+        const snackBar = SnackBar(content: Text('Adatbázis frissítés sikeres'));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
       _goToMainScreen();
     } else {
-      String response = await downloadFile(
-          "https://miserend.hu/fajlok/sqlite/miserend_v4.sqlite3",
-          "miserend.sqlite3", await getDatabasesPath());
-      _goToMainScreen();
+      if (context.mounted) {
+        const snackBar = SnackBar(content: Text('Adatbázis frissítése sikertelen'));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
     }
   }
 
@@ -37,40 +74,53 @@ class _RouteSplashState extends State<RouteSplash> {
   @override
   void initState() {
     super.initState();
-    _fetchPrefs();//running initialisation code; getting prefs etc.
+    _checkDatabase(); //running initialisation code; getting prefs etc.
   }
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: CircularProgressIndicator()//show splash screen here instead of progress indicator
+        child:
+            CircularProgressIndicator(), //show splash screen here instead of progress indicator
       ),
     );
   }
 
-  Future<String> downloadFile(String url, String fileName, String dir) async {
-    HttpClient httpClient = new HttpClient();
-    File file;
-    String filePath = '';
-
-    try {
-      var request = await httpClient.getUrl(Uri.parse(url));
-      var response = await request.close();
-      if(response.statusCode == 200) {
-        var bytes = await consolidateHttpClientResponseBytes(response);
-        filePath = '$dir/$fileName';
-        file = File(filePath);
-        await file.writeAsBytes(bytes);
-      }
-      else {
-        filePath = 'Error code: '+response.statusCode.toString();
-      }
-    }
-    catch(ex){
-      filePath = 'Can not fetch url';
-    }
-
-    return filePath;
+  Future<void> _showDialog(
+    String title,
+    String description,
+    bool forced,
+  ) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(description),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Nem'),
+              onPressed: () {
+                if (forced) {
+                  SystemNavigator.pop();
+                } else {
+                  Navigator.of(context).pop();
+                  _goToMainScreen();
+                }
+              },
+            ),
+            TextButton(
+              child: const Text('Igen'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _downloadDatabase();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
