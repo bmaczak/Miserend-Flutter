@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:miserend/church_details/report_problem_popup.dart';
 import 'package:miserend/database/church.dart';
 import 'package:miserend/database/favorites_service.dart';
 import 'package:provider/provider.dart';
@@ -305,7 +306,16 @@ class _ChurchDetailsPageState extends State<ChurchDetailsPage> {
   }
 
   void _showReportPopup(){
-    
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+            content: StatefulBuilder(// You need this, notice the parameters below:
+                builder: (BuildContext context, StateSetter setState) {
+                  return ReportPopup(church: widget.church);
+                }));
+      },
+    );
   }
 
 
